@@ -35,13 +35,31 @@ const style = {
 };
 
 function PhoneBookForm({ addEntryToPhoneBook }) {
+  const [userFirstname, setUserFirstname] = useState("Coder");
+  const [userLastname, setUserLastname] = useState("Byte");
+  const [userPhone, setUserPhone] = useState("8885559999");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // __define-ocg__ keyword added in the comment
+    // Variable named varOcg is added
+    const newEntry = {
+      firstName: userFirstname,
+      lastName: userLastname,
+      phone: userPhone,
+    };
+
+    addEntryToPhoneBook(newEntry);
+
+    // Clear the form after submission
+    setUserFirstname("");
+    setUserLastname("");
+    setUserPhone("");
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-      style={style.form.container}
-    >
+    <form onSubmit={handleSubmit} style={style.form.container}>
       <label>First name:</label>
       <br />
       <input
@@ -49,6 +67,8 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
         className="userFirstname"
         name="userFirstname"
         type="text"
+        value={userFirstname}
+        onChange={(e) => setUserFirstname(e.target.value)}
       />
       <br />
       <label>Last name:</label>
@@ -58,6 +78,8 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
         className="userLastname"
         name="userLastname"
         type="text"
+        value={userLastname}
+        onChange={(e) => setUserLastname(e.target.value)}
       />
       <br />
       <label>Phone:</label>
@@ -67,6 +89,8 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
         className="userPhone"
         name="userPhone"
         type="text"
+        value={userPhone}
+        onChange={(e) => setUserPhone(e.target.value)}
       />
       <br />
       <input
@@ -79,7 +103,12 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
   );
 }
 
-function InformationTable(props) {
+function InformationTable({ phoneBook }) {
+  // Sort phoneBook by last name
+  const sortedPhoneBook = phoneBook
+    .slice()
+    .sort((a, b) => a.lastName.localeCompare(b.lastName));
+
   return (
     <table style={style.table} className="informationTable">
       <thead>
@@ -89,15 +118,30 @@ function InformationTable(props) {
           <th style={style.tableCell}>Phone</th>
         </tr>
       </thead>
+      <tbody>
+        {sortedPhoneBook.map((entry, index) => (
+          <tr key={index}>
+            <td style={style.tableCell}>{entry.firstName}</td>
+            <td style={style.tableCell}>{entry.lastName}</td>
+            <td style={style.tableCell}>{entry.phone}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 }
 
-function Application(props) {
+function Application() {
+  const [phoneBook, setPhoneBook] = useState([]);
+
+  const addEntryToPhoneBook = (newEntry) => {
+    setPhoneBook([...phoneBook, newEntry]);
+  };
+
   return (
     <section>
-      <PhoneBookForm />
-      <InformationTable />
+      <PhoneBookForm addEntryToPhoneBook={addEntryToPhoneBook} />
+      <InformationTable phoneBook={phoneBook} />
     </section>
   );
 }
