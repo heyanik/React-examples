@@ -3,17 +3,13 @@ import { createRoot } from "react-dom/client";
 
 const languages = ["JavaScript", "Python"];
 
-// __define-ocg__ - Comment with the specified keyword
 const LanguageContext = createContext();
 
 function App() {
+  // implement Context here so can be used in child components
   const [favoriteLanguage, setFavoriteLanguage] = useState(languages[0]);
 
-  // __define-ocg__ - Variable with the specified name
-  const varOcg = true;
-
   return (
-    // __define-ocg__ - Using Context.Provider to provide the context value
     <LanguageContext.Provider value={{ favoriteLanguage, setFavoriteLanguage }}>
       <MainSection />
     </LanguageContext.Provider>
@@ -32,7 +28,7 @@ function MainSection() {
   return (
     <div>
       <p id="favoriteLanguage">
-        favorite programming language: {favoriteLanguage}
+        favorite programming languages: {favoriteLanguage}
       </p>
       <button id="changeFavorite" onClick={toggleLanguage}>
         toggle language
