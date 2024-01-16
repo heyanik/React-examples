@@ -3,32 +3,44 @@ import { createRoot } from "react-dom/client";
 
 const languages = ["JavaScript", "Python"];
 
-const LanguageContext = createContext();
+// Create a context with initial values
+const LanguageContext = createContext({
+  favoriteLanguage: languages[0],
+  toggleLanguage: () => {},
+});
 
 function App() {
-  // implement Context here so can be used in child components
+  // State to manage the current favorite language
   const [favoriteLanguage, setFavoriteLanguage] = useState(languages[0]);
 
-  return (
-    <LanguageContext.Provider value={{ favoriteLanguage, setFavoriteLanguage }}>
-      <MainSection />
-    </LanguageContext.Provider>
-  );
-}
-
-function MainSection() {
-  const { favoriteLanguage, setFavoriteLanguage } = useContext(LanguageContext);
-
+  // Function to toggle the favorite language
   const toggleLanguage = () => {
     const currentIndex = languages.indexOf(favoriteLanguage);
     const newIndex = (currentIndex + 1) % languages.length;
     setFavoriteLanguage(languages[newIndex]);
   };
 
+  // Provide the context value to the child components
+  const contextValue = {
+    favoriteLanguage,
+    toggleLanguage,
+  };
+
+  return (
+    <LanguageContext.Provider value={contextValue}>
+      <MainSection />
+    </LanguageContext.Provider>
+  );
+}
+
+function MainSection() {
+  // Consume the context to access the current favorite language and toggle function
+  const { favoriteLanguage, toggleLanguage } = useContext(LanguageContext);
+
   return (
     <div>
       <p id="favoriteLanguage">
-        favorite programming languages: {favoriteLanguage}
+        favorite programming language: {favoriteLanguage}
       </p>
       <button id="changeFavorite" onClick={toggleLanguage}>
         toggle language
